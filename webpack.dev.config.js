@@ -46,11 +46,11 @@ module.exports = {
         splitChunks: {
             cacheGroups: {
                 vendor: {
-                  test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
-                  filename: 'react.lib.js',
-                  chunks: 'all',
+                    test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
+                    filename: 'react.lib.js',
+                    chunks: 'all',
                 }
-              }
+            }
         }
     },
 

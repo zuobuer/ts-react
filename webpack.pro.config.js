@@ -1,4 +1,5 @@
 const path = require("path");
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const serverPath = "/dist/";
 const buildPath = path.resolve(__dirname, './dist/');
 module.exports = {
@@ -8,7 +9,7 @@ module.exports = {
     entry: "./src/index.tsx",
 
     output: {
-        filename: "app.js",
+        filename: 'app.js',
         path: buildPath,
         chunkFilename: '[name].chunck.[hash:8].js',
         publicPath: serverPath,
@@ -42,21 +43,21 @@ module.exports = {
     //     "react-dom": "ReactDOM"
     // },
 
+    plugins: [new HtmlWebpackPlugin({
+        title: "ts-react",
+        template: path.resolve(__dirname, './public/index.html'),
+        inject: "head",
+    })],
+
     optimization: {
         splitChunks: {
             cacheGroups: {
                 vendor: {
-                  test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
-                  filename: 'react.lib.js',
-                  chunks: 'all',
+                    test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
+                    filename: 'react.lib.js',
+                    chunks: 'all',
                 }
-              }
+            }
         }
     },
-
-    devServer: {
-        publicPath: serverPath,
-        port: "8080",
-        compress: true,
-    }
 };
