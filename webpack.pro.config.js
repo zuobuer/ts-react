@@ -77,8 +77,7 @@ module.exports = {
             name: true,
             cacheGroups: {
                 vendor: {
-                    test: /[\\/]node_modules[\\/](react|react-dom|react-router|react-router-dom|history)[\\/]/,
-                    // test: /[\\/]node_modules[\\/]/,
+                    test: /[\\/]node_modules[\\/](react|react-dom|react-router-dom)[\\/]/,
                     filename: 'react.lib.js',
                     chunks: 'all',
                 },

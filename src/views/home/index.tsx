@@ -1,11 +1,10 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 
 
-export interface IAppProps {
+export interface IAppProps extends RouteComponentProps {
 }
-
-export default class IApp extends React.Component<IAppProps, any> {
+class IApp extends React.Component<IAppProps, any> {
   public render() {
     return (
       <div>
@@ -14,3 +13,5 @@ export default class IApp extends React.Component<IAppProps, any> {
     );
   }
 }
+
+export default withRouter(IApp);
