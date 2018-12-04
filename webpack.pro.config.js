@@ -1,6 +1,7 @@
 const path = require("path");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const Analyzer = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const serverPath = "/dist/";
 const buildPath = path.resolve(__dirname, './dist/');
 module.exports = {
@@ -10,9 +11,9 @@ module.exports = {
     entry: "./src/index.tsx",
 
     output: {
-        filename: '[id].app.js',
+        filename: 'app.js',
         path: buildPath,
-        chunkFilename: '[id].[chunkhash:8].chunk.js',
+        chunkFilename: '[name].[chunkhash:8].chunk.js',
         publicPath: serverPath,
     },
 
@@ -54,11 +55,14 @@ module.exports = {
     //     "react-dom": "ReactDOM"
     // },
 
-    plugins: [new HtmlWebpackPlugin({
-        title: "ts-react",
-        template: path.resolve(__dirname, './public/index.html'),
-        inject: "head",
-    })],
+    plugins: [
+        new HtmlWebpackPlugin({
+            title: "ts-react",
+            template: path.resolve(__dirname, './public/index.html'),
+            inject: "head",
+        }),
+        new Analyzer(),
+    ],
 
     optimization: {
         minimizer: [
@@ -73,8 +77,9 @@ module.exports = {
             name: true,
             cacheGroups: {
                 vendor: {
-                    test: /[\\/]node_modules[\\/](react|react-dom|react-router-dom|history)[\\/]/,
-                    filename: '[id].lib.js',
+                    test: /[\\/]node_modules[\\/](react|react-dom|react-router|react-router-dom|history)[\\/]/,
+                    // test: /[\\/]node_modules[\\/]/,
+                    filename: 'react.lib.js',
                     chunks: 'all',
                 },
                 default: {

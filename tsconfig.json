@@ -7,11 +7,11 @@
         "target": "es5",
         "jsx": "react",
         "lib": ["es2015", "dom"],
-        "baseUrl": ".",
+        "baseUrl": "./",
         "paths": {
-            "@views": ["src/views"],
-            "@components": ["src/components"],
-        },
+            "@views/*": ["src/views/*"],
+            "@components/*": ["src/views/*"],
+        }
         // "allowJs": true,
     },
     "include": [
