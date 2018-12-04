@@ -10,7 +10,7 @@ module.exports = {
     output: {
         filename: "app.js",
         path: buildPath,
-        chunkFilename: '[name].chunck.[hash:8].js',
+        chunkFilename: '[name][contenthash].js',
         publicPath: serverPath,
     },
 
@@ -19,7 +19,11 @@ module.exports = {
 
     resolve: {
         // Add '.ts' and '.tsx' as resolvable extensions.
-        extensions: [".ts", ".tsx", ".js", ".json"]
+        extensions: [".ts", ".tsx", ".js", ".json"],
+        // alias: {
+        //     "@views": path.resolve(__dirname, "./src/views"),
+        //     "@components":  path.resolve(__dirname, "./src/components"),
+        // }
     },
 
     module: {
@@ -28,7 +32,13 @@ module.exports = {
             { test: /\.tsx?$/, loader: "awesome-typescript-loader" },
 
             // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
-            { enforce: "pre", test: /\.js$/, loader: "source-map-loader" }
+            { enforce: "pre", test: /\.js$/, loader: "source-map-loader" },
+
+            // css style loader
+            {test: /\.css$/, loader: ['style-loader', 'css-loader']},
+
+            //
+            {test: /\.scss$/, loader: ['style-loader', 'css-loader', 'sass-loader']},
         ]
     },
 
@@ -44,11 +54,22 @@ module.exports = {
 
     optimization: {
         splitChunks: {
+            chunks: 'all',
+            minSize: 1000,
+            maxInitialRequests: 2,
+            maxAsyncRequests: 5,
+            automaticNameDelimiter: '.',
+            name: true,
             cacheGroups: {
                 vendor: {
-                    test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
+                    test: /[\\/]node_modules[\\/](react|react-dom|react-router-dom)[\\/]/,
                     filename: 'react.lib.js',
                     chunks: 'all',
+                },
+                default: {
+                    minChunks: 1,
+                    priority: -20,
+                    reuseExistingChunk: true
                 }
             }
         }

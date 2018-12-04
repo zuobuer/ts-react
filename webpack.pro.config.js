@@ -1,5 +1,6 @@
 const path = require("path");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const serverPath = "/dist/";
 const buildPath = path.resolve(__dirname, './dist/');
 module.exports = {
@@ -9,9 +10,9 @@ module.exports = {
     entry: "./src/index.tsx",
 
     output: {
-        filename: 'app.js',
+        filename: '[id].app.js',
         path: buildPath,
-        chunkFilename: '[name].chunck.[hash:8].js',
+        chunkFilename: '[id].[chunkhash:8].chunk.js',
         publicPath: serverPath,
     },
 
@@ -20,7 +21,11 @@ module.exports = {
 
     resolve: {
         // Add '.ts' and '.tsx' as resolvable extensions.
-        extensions: [".ts", ".tsx", ".js", ".json"]
+        extensions: [".ts", ".tsx", ".js", ".json"],
+        // alias: {
+        //     "@views": path.resolve(__dirname, "./src/views"),
+        //     "@components":  path.resolve(__dirname, "./src/components"),
+        // }
     },
 
     module: {
@@ -29,7 +34,13 @@ module.exports = {
             { test: /\.tsx?$/, loader: "awesome-typescript-loader" },
 
             // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
-            { enforce: "pre", test: /\.js$/, loader: "source-map-loader" }
+            { enforce: "pre", test: /\.js$/, loader: "source-map-loader" },
+
+            // css style loader
+            { test: /\.css$/, loader: ['style-loader', 'css-loader'] },
+
+            //
+            { test: /\.scss$/, loader: ['style-loader', 'css-loader', 'sass-loader'] },
         ]
     },
 
@@ -50,12 +61,26 @@ module.exports = {
     })],
 
     optimization: {
+        minimizer: [
+            new UglifyJsPlugin(),
+        ],
         splitChunks: {
+            chunks: 'all',
+            minSize: 0,
+            maxInitialRequests: 2,
+            maxAsyncRequests: 5,
+            automaticNameDelimiter: '.',
+            name: true,
             cacheGroups: {
                 vendor: {
-                    test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
-                    filename: 'react.lib.js',
+                    test: /[\\/]node_modules[\\/](react|react-dom|react-router-dom|history)[\\/]/,
+                    filename: '[id].lib.js',
                     chunks: 'all',
+                },
+                default: {
+                    minChunks: 1,
+                    priority: -20,
+                    reuseExistingChunk: true
                 }
             }
         }

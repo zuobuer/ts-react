@@ -5,7 +5,14 @@
         "noImplicitAny": true,
         "module": "commonjs",
         "target": "es5",
-        "jsx": "react"
+        "jsx": "react",
+        "lib": ["es2015", "dom"],
+        "baseUrl": ".",
+        "paths": {
+            "@views": ["src/views"],
+            "@components": ["src/components"],
+        },
+        // "allowJs": true,
     },
     "include": [
         "./src/**/*"
