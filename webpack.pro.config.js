@@ -23,10 +23,10 @@ module.exports = {
     resolve: {
         // Add '.ts' and '.tsx' as resolvable extensions.
         extensions: [".ts", ".tsx", ".js", ".json"],
-        // alias: {
-        //     "@views": path.resolve(__dirname, "./src/views"),
-        //     "@components":  path.resolve(__dirname, "./src/components"),
-        // }
+        alias: {
+            "@views": path.resolve(__dirname, "./src/views"),
+            "@components":  path.resolve(__dirname, "./src/components"),
+        }
     },
 
     module: {
