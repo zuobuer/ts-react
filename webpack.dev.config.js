@@ -22,7 +22,7 @@ module.exports = {
         extensions: [".ts", ".tsx", ".js", ".json"],
         alias: {
             "@views": path.resolve(__dirname, "./src/views"),
-            "@components":  path.resolve(__dirname, "./src/components"),
+            "@components": path.resolve(__dirname, "./src/components"),
             "@actions": path.resolve(__dirname, "./src/actions"),
             "@types": path.resolve(__dirname, "./src/types"),
         }
@@ -37,10 +37,10 @@ module.exports = {
             { enforce: "pre", test: /\.js$/, loader: "source-map-loader" },
 
             // css style loader
-            {test: /\.css$/, loader: ['style-loader', 'css-loader']},
+            { test: /\.css$/, loader: ['style-loader', 'css-loader'] },
 
             //
-            {test: /\.scss$/, loader: ['style-loader', 'css-loader', 'sass-loader']},
+            { test: /\.scss$/, loader: ['style-loader', 'css-loader', 'sass-loader'] },
         ]
     },
 
@@ -64,7 +64,8 @@ module.exports = {
             name: true,
             cacheGroups: {
                 vendor: {
-                    test: /[\\/]node_modules[\\/](react|react-dom|react-router-dom)[\\/]/,
+                    // test: /[\\/]node_modules[\\/](react|react-dom|react-router-dom)[\\/]/,
+                    test: /[\\/]node_modules[\\/]/,
                     filename: 'react.lib.js',
                     chunks: 'all',
                 },

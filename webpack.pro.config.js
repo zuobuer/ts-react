@@ -25,7 +25,7 @@ module.exports = {
         extensions: [".ts", ".tsx", ".js", ".json"],
         alias: {
             "@views": path.resolve(__dirname, "./src/views"),
-            "@components":  path.resolve(__dirname, "./src/components"),
+            "@components": path.resolve(__dirname, "./src/components"),
             "@actions": path.resolve(__dirname, "./src/actions"),
             "@types": path.resolve(__dirname, "./src/types"),
         }
@@ -79,7 +79,8 @@ module.exports = {
             name: true,
             cacheGroups: {
                 vendor: {
-                    test: /[\\/]node_modules[\\/](react|react-dom|react-router-dom)[\\/]/,
+                    // test: /[\\/]node_modules[\\/](react|react-dom|react-router-dom)[\\/]/,
+                    test: /[\\/]node_modules[\\/]/,
                     filename: 'react.lib.js',
                     chunks: 'all',
                 },
