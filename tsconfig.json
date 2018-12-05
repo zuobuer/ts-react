@@ -11,6 +11,8 @@
         "paths": {
             "@views/*": ["src/views/*"],
             "@components/*": ["src/views/*"],
+            "@actions": ["src/actions"],
+            "@types": ["src/types"],
         }
         // "allowJs": true,
     },
