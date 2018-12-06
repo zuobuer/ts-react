@@ -1,21 +1,31 @@
 const path = require("path");
 const serverPath = "/dist/";
 const buildPath = path.resolve(__dirname, './dist/');
+const publicPath = '/';
 module.exports = {
 
     mode: "development",
 
+    // Enable sourcemaps for debugging webpack's output.
+    devtool: "source-map",
+
     entry: "./src/index.tsx",
 
     output: {
-        filename: "app.js",
-        path: buildPath,
-        chunkFilename: '[name][contenthash].js',
-        publicPath: serverPath,
+        pathinfo: true,
+        filename: "static/js/bundle.js",
+        // path: buildPath,
+        chunkFilename: 'static/js/[name].chunk.js',
+        publicPath: publicPath,
     },
 
-    // Enable sourcemaps for debugging webpack's output.
-    devtool: "source-map",
+    optimization: {
+        splitChunks: {
+            chunks: 'all',
+            name: false,
+        },
+        // runtimeChunk: false,
+    },
 
     resolve: {
         // Add '.ts' and '.tsx' as resolvable extensions.
@@ -29,7 +39,11 @@ module.exports = {
     },
 
     module: {
+        strictExportPresence: true,
         rules: [
+            // Disable require.ensure as it's not a standard language feature.
+            { parser: { requireEnsure: false } },
+
             // All files with a '.ts' or '.tsx' extension will be handled by 'awesome-typescript-loader'.
             { test: /\.tsx?$/, loader: "awesome-typescript-loader" },
 
@@ -54,29 +68,29 @@ module.exports = {
     //     "react-dom": "ReactDOM"
     // },
 
-    optimization: {
-        splitChunks: {
-            chunks: 'all',
-            minSize: 1000,
-            maxInitialRequests: 2,
-            maxAsyncRequests: 5,
-            automaticNameDelimiter: '.',
-            name: true,
-            cacheGroups: {
-                vendor: {
-                    // test: /[\\/]node_modules[\\/](react|react-dom|react-router-dom)[\\/]/,
-                    test: /[\\/]node_modules[\\/]/,
-                    filename: 'react.lib.js',
-                    chunks: 'all',
-                },
-                default: {
-                    minChunks: 1,
-                    priority: -20,
-                    reuseExistingChunk: true
-                }
-            }
-        }
-    },
+    // optimization: {
+    //     splitChunks: {
+    //         chunks: 'all',
+    //         minSize: 1000,
+    //         maxInitialRequests: 2,
+    //         maxAsyncRequests: 5,
+    //         automaticNameDelimiter: '.',
+    //         name: true,
+    //         cacheGroups: {
+    //             vendor: {
+    //                 // test: /[\\/]node_modules[\\/](react|react-dom|react-router-dom)[\\/]/,
+    //                 test: /[\\/]node_modules[\\/]/,
+    //                 filename: 'react.lib.js',
+    //                 chunks: 'all',
+    //             },
+    //             default: {
+    //                 minChunks: 1,
+    //                 priority: -20,
+    //                 reuseExistingChunk: true
+    //             }
+    //         }
+    //     }
+    // },
 
     devServer: {
         publicPath: serverPath,

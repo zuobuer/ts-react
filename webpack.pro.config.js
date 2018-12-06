@@ -2,23 +2,44 @@ const path = require("path");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const Analyzer = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-const serverPath = "/dist/";
-const buildPath = path.resolve(__dirname, './dist/');
 module.exports = {
-
     mode: "production",
-
-    entry: "./src/index.tsx",
-
-    output: {
-        filename: 'app.js',
-        path: buildPath,
-        chunkFilename: '[name].[chunkhash:8].chunk.js',
-        publicPath: serverPath,
-    },
-
+    bail: true,
     // Enable sourcemaps for debugging webpack's output.
     devtool: "source-map",
+    entry: ["./src/index.tsx"],
+    output: {
+        path: path.resolve(__dirname, './build'),
+        filename: 'static/js/entry.js',
+        chunkFilename: 'static/js/[name].[chunkhash:8].chunk.js',
+        publicPath: "/",
+    },
+    optimization: {
+        minimizer: [
+            new UglifyJsPlugin(),
+        ],
+        splitChunks: {
+            chunks: 'all',
+            minSize: 30000,
+            maxInitialRequests: 3,
+            automaticNameDelimiter: '.',
+            name: true,
+            cacheGroups: {
+                vendors: {
+                    test: /[\\/]node_modules[\\/]/,
+                    chunks: 'all',
+                    filename: "static/js/lib.js",
+                    priority: -10
+                },
+                default: {
+                    minChunks: 2,
+                    priority: -20,
+                    reuseExistingChunk: true
+                },
+            },
+        },
+        runtimeChunk: false,
+    },
 
     resolve: {
         // Add '.ts' and '.tsx' as resolvable extensions.
@@ -32,6 +53,7 @@ module.exports = {
     },
 
     module: {
+        strictExportPresence: true,
         rules: [
             // All files with a '.ts' or '.tsx' extension will be handled by 'awesome-typescript-loader'.
             { test: /\.tsx?$/, loader: "awesome-typescript-loader" },
@@ -47,49 +69,31 @@ module.exports = {
         ]
     },
 
-    // When importing a module whose path matches one of the following, just
-    // assume a corresponding global variable exists and use that instead.
-    // This is important because it allows us to avoid bundling all of our
-    // dependencies, which allows browsers to cache those libraries between builds.
-
-    // externals: {
-    //     "react": "React",
-    //     "react-dom": "ReactDOM"
-    // },
-
     plugins: [
         new HtmlWebpackPlugin({
-            title: "ts-react",
-            template: path.resolve(__dirname, './public/index.html'),
-            inject: "head",
+            inject: true,
+            template: path.resolve(__dirname, 'public/index.html'),
+            minify: {
+                removeComments: true,
+                collapseWhitespace: true,
+                removeRedundantAttributes: true,
+                useShortDoctype: true,
+                removeEmptyAttributes: true,
+                removeStyleLinkTypeAttributes: true,
+                keepClosingSlash: true,
+                minifyJS: true,
+                minifyCSS: true,
+                minifyURLs: true,
+            },
         }),
         new Analyzer(),
     ],
-
-    optimization: {
-        minimizer: [
-            new UglifyJsPlugin(),
-        ],
-        splitChunks: {
-            chunks: 'all',
-            minSize: 0,
-            maxInitialRequests: 2,
-            maxAsyncRequests: 5,
-            automaticNameDelimiter: '.',
-            name: true,
-            cacheGroups: {
-                vendor: {
-                    // test: /[\\/]node_modules[\\/](react|react-dom|react-router-dom)[\\/]/,
-                    test: /[\\/]node_modules[\\/]/,
-                    filename: 'react.lib.js',
-                    chunks: 'all',
-                },
-                default: {
-                    minChunks: 1,
-                    priority: -20,
-                    reuseExistingChunk: true
-                }
-            }
-        }
+    node: {
+        dgram: 'empty',
+        fs: 'empty',
+        net: 'empty',
+        tls: 'empty',
+        child_process: 'empty',
     },
+    performance: false,
 };

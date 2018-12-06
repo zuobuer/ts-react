@@ -7,7 +7,7 @@
   "author": "zuobuer",
   "scripts": {
     "dev": "webpack-dev-server --config ./webpack.dev.config.js",
-    "build": "rm -rf ./dist/* & webpack --config ./webpack.pro.config.js"
+    "build": "rm -rf ./build/* & webpack --config ./webpack.pro.config.js"
   },
   "dependencies": {
     "@types/react": "^16.7.8",
