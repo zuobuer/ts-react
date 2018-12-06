@@ -48,6 +48,7 @@ class IApp extends React.Component<IAppProps, any> {
         <div>
           <button onClick={this.handlers.addTodo}>add</button>
         </div>
+        <div className='test-css'></div>
       </div>
     );
   }

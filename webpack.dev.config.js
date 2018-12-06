@@ -1,30 +1,44 @@
 const path = require("path");
-const serverPath = "/dist/";
-const buildPath = path.resolve(__dirname, './dist/');
-const publicPath = '/';
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const Analyzer = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 module.exports = {
-
     mode: "development",
-
+    bail: true,
     // Enable sourcemaps for debugging webpack's output.
     devtool: "source-map",
-
-    entry: "./src/index.tsx",
-
+    entry: ["./src/index.tsx"],
     output: {
-        pathinfo: true,
-        filename: "static/js/bundle.js",
-        // path: buildPath,
-        chunkFilename: 'static/js/[name].chunk.js',
-        publicPath: publicPath,
+        path: path.resolve(__dirname, './build'),
+        filename: 'static/js/entry.js',
+        chunkFilename: 'static/js/[name].[chunkhash:8].chunk.js',
+        publicPath: "/",
     },
-
     optimization: {
+        minimizer: [
+            new UglifyJsPlugin(),
+        ],
         splitChunks: {
             chunks: 'all',
-            name: false,
+            minSize: 30000,
+            maxInitialRequests: 3,
+            automaticNameDelimiter: '.',
+            name: true,
+            cacheGroups: {
+                vendors: {
+                    test: /[\\/]node_modules[\\/]/,
+                    chunks: 'all',
+                    filename: "static/js/lib.js",
+                    priority: -10
+                },
+                default: {
+                    minChunks: 2,
+                    priority: -20,
+                    reuseExistingChunk: true
+                },
+            },
         },
-        // runtimeChunk: false,
+        runtimeChunk: false,
     },
 
     resolve: {
@@ -41,9 +55,6 @@ module.exports = {
     module: {
         strictExportPresence: true,
         rules: [
-            // Disable require.ensure as it's not a standard language feature.
-            { parser: { requireEnsure: false } },
-
             // All files with a '.ts' or '.tsx' extension will be handled by 'awesome-typescript-loader'.
             { test: /\.tsx?$/, loader: "awesome-typescript-loader" },
 
@@ -51,50 +62,67 @@ module.exports = {
             { enforce: "pre", test: /\.js$/, loader: "source-map-loader" },
 
             // css style loader
-            { test: /\.css$/, loader: ['style-loader', 'css-loader'] },
+            {
+                test: /\.css$/, loader: [
+                    'style-loader',
+                    {
+                        loader: 'css-loader', options: {
+                            importLoaders: 1
+                        }
+                    },
+                    'postcss-loader',
+                ]
+            },
 
             //
-            { test: /\.scss$/, loader: ['style-loader', 'css-loader', 'sass-loader'] },
+            {
+                test: /\.scss$/,
+                loader: [
+                    'style-loader',
+                    {
+                        loader: 'css-loader', options: {
+                            importLoaders: 1
+                        }
+                    },
+                    'postcss-loader',
+                    'sass-loader',
+                ]
+            },
         ]
     },
 
-    // When importing a module whose path matches one of the following, just
-    // assume a corresponding global variable exists and use that instead.
-    // This is important because it allows us to avoid bundling all of our
-    // dependencies, which allows browsers to cache those libraries between builds.
-
-    // externals: {
-    //     "react": "React",
-    //     "react-dom": "ReactDOM"
-    // },
-
-    // optimization: {
-    //     splitChunks: {
-    //         chunks: 'all',
-    //         minSize: 1000,
-    //         maxInitialRequests: 2,
-    //         maxAsyncRequests: 5,
-    //         automaticNameDelimiter: '.',
-    //         name: true,
-    //         cacheGroups: {
-    //             vendor: {
-    //                 // test: /[\\/]node_modules[\\/](react|react-dom|react-router-dom)[\\/]/,
-    //                 test: /[\\/]node_modules[\\/]/,
-    //                 filename: 'react.lib.js',
-    //                 chunks: 'all',
-    //             },
-    //             default: {
-    //                 minChunks: 1,
-    //                 priority: -20,
-    //                 reuseExistingChunk: true
-    //             }
-    //         }
-    //     }
-    // },
+    plugins: [
+        new HtmlWebpackPlugin({
+            inject: true,
+            template: path.resolve(__dirname, 'public/index.html'),
+            minify: {
+                removeComments: true,
+                collapseWhitespace: true,
+                removeRedundantAttributes: true,
+                useShortDoctype: true,
+                removeEmptyAttributes: true,
+                removeStyleLinkTypeAttributes: true,
+                keepClosingSlash: true,
+                minifyJS: true,
+                minifyCSS: true,
+                minifyURLs: true,
+            },
+        }),
+    ],
+    node: {
+        dgram: 'empty',
+        fs: 'empty',
+        net: 'empty',
+        tls: 'empty',
+        child_process: 'empty',
+    },
+    performance: false,
 
     devServer: {
-        publicPath: serverPath,
+        publicPath: "/",
+        contentBase: "./public",
         port: "8080",
         compress: true,
+        open: true,
     }
 };

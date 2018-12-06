@@ -1,5 +1,16 @@
 .todo-list{
+    // display: flex;
+    // flex-direction: row;
+    // ul{
+    //     flex: 1;
+    // }
     li.checked{
         text-decoration: line-through;
-    }   
+    }
+    .test-css{
+        display: flex;
+    }
+    &-jj{
+
+    }
 }
