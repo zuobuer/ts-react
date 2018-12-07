@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { Switch, Route, Router } from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom';
 import A from  '@views/static';
+import B from  '@views/thunk';
 
 // import Home from './../views/home';
 // import About from './../views/about';
@@ -16,6 +17,7 @@ const R = () => <React.Suspense fallback={<div>loading</div>}>
         <Route exact path="/" render={(props) => <Home {...props} />} />
         <Route path="/about" render={(props) => <About {...props} />} />
         <Route path="/a" component={A} />
+        <Route path="/thunk" component={B} />
     </Switch>
 </React.Suspense>
 
