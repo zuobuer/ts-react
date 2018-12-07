@@ -55,37 +55,40 @@ module.exports = {
     module: {
         strictExportPresence: true,
         rules: [
-            // All files with a '.ts' or '.tsx' extension will be handled by 'awesome-typescript-loader'.
-            { test: /\.tsx?$/, loader: "awesome-typescript-loader" },
+             // All files with a '.ts' or '.tsx' extension will be handled by 'awesome-typescript-loader'.
+             { test: /\.tsx?$/, loader: require.resolve("awesome-typescript-loader") },
 
-            // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
-            { enforce: "pre", test: /\.js$/, loader: "source-map-loader" },
-
+             // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
+             { enforce: "pre", test: /\.js$/, loader: require.resolve("source-map-loader" )},
+ 
             // css style loader
             {
-                test: /\.css$/, loader: [
-                    'style-loader',
+                test: /\.css$/,
+                use: [
+                    require.resolve('style-loader'),
                     {
-                        loader: 'css-loader', options: {
-                            importLoaders: 1
+                        loader: require.resolve('css-loader'),
+                        options: {
+                            importLoaders: 1,
                         }
                     },
-                    'postcss-loader',
+                    require.resolve('postcss-loader'),
                 ]
             },
 
-            //
+            // sass loader
             {
                 test: /\.scss$/,
-                loader: [
-                    'style-loader',
+                use: [
+                    require.resolve('style-loader'),
                     {
-                        loader: 'css-loader', options: {
-                            importLoaders: 1
+                        loader: require.resolve('css-loader'),
+                        options: {
+                            importLoaders: 2
                         }
                     },
-                    'postcss-loader',
-                    'sass-loader',
+                    require.resolve('postcss-loader'),
+                    require.resolve('sass-loader'),
                 ]
             },
         ]
