@@ -3,17 +3,24 @@ import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { AppState, Todos } from '@types';
 import { Dispatch, Action } from 'redux';
-import { ThunkAction, ThunkDispatch } from 'redux-thunk';
+import { ThunkDispatch } from 'redux-thunk';
+
+import {
+  addTodoActionCreator,
+  asyncThunkActionCreator,
+} from '@actions';
 
 export interface IAppProps extends RouteComponentProps {
-  todos: Todos,
-  asyncAction: () => void
+  todos: Todos;
+  asyncAddItem: (name: string) => void;
+  // dispatch: (action: Action) => void,
 }
 
 class IApp extends React.Component<IAppProps, any> {
 
   componentDidMount() {
-    this.props.asyncAction()
+    // this.props.dispatch(addTodoActionCreator(name))
+    this.props.asyncAddItem("world");
   }
 
   public render() {
@@ -41,18 +48,11 @@ const mapStateToProps = (state: AppState) => {
   }
 }
 
-let todoId = 1;
-
-const mapDispatchToProps = (dispatch: ThunkDispatch<void, undefined, Action>) => {
+const mapDispatchToProps = (dispatch: ThunkDispatch<AppState, undefined, Action>) => {
   return {
-    asyncAction: () => {
-      dispatch({
-        type: "ADD_TODO",
-        payload: {
-          name: "hello world",
-          checked: false,
-          id: ++todoId,
-        }
+    asyncAddItem: (name: string) => {
+      dispatch(asyncThunkActionCreator(name)).then(()=>{
+        console.log("async thunk dispatch")
       })
     }
   }

@@ -6,21 +6,16 @@ import { Dispatch, Action } from 'redux';
 import { connect } from 'react-redux';
 import './style.scss';
 
-
 export interface IAppProps extends RouteComponentProps {
   todos: Todos;
-  addTodo: (nextTodoName: string) => {};
+  addTodo: (name: string) => {};
   deleteTodo: (index: number) => {};
-  dispatch?: (action: Action) => void
 }
 class IApp extends React.Component<IAppProps, any> {
 
   private handlers = {
     addTodo: () => {
-      // this.props.history.push("/about");
-
       let nextTodoName = window.prompt("enter you next todo item");
-      // console.log(nextTodoName)
       this.props.addTodo(nextTodoName);
     },
     deleteTodo: (index: number) => {
@@ -60,7 +55,7 @@ const mapStateToProps = (state: AppState) => {
   }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch) => {
+const mapDispatchToProps = (dispatch: Dispatch<Action>) => {
   return {
     addTodo: (nextTodoName: string) => {
       dispatch(addTodoActionCreator(nextTodoName))

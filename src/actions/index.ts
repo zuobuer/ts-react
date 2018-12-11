@@ -1,65 +1,67 @@
-import { AddTodoAction, DeleteTodoAction } from '@types';
 import { Action, ActionCreator, Dispatch } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 
+let pid = 0;
 
-const reduxAction: ActionCreator<Action> = (text: string) => {
+export const addTodoActionCreator: ActionCreator<Action> = (name: string) => {
     return {
-        type: "SET_TEXT",
-        text
+        type: "ADD_TODO",
+        payload: {
+            name,
+            checked: false,
+            id: ++pid,
+        },
+    }
+}
+
+export const deleteTodoActionCreator: ActionCreator<Action> = (index: number) => {
+    return {
+        type: "DELETE_TODO",
+        paylod: index,
+    }
+}
+
+
+export const reduxActionCreator: ActionCreator<Action> = (name: string) => {
+    return {
+        type: "ADD_TODO",
+        payload: {
+            name,
+            checked: false,
+            id: ++pid,
+        },
     };
 };
 
-const thunkAction: ActionCreator<ThunkAction<Action, {}, undefined, Action>> = (text: string) => {
+export const thunkActionCreator: ActionCreator<ThunkAction<Action, {}, undefined, Action>> = (name: string) => {
     return (dispatch: Dispatch<Action>, getState: () => void): Action => {
         return dispatch({
-            type: "SET_TEXT",
-            text
+            type: "ADD_TODO",
+            payload: {
+                name,
+                checked: false,
+                id: ++pid,
+            },
         });
     };
 };
 
 
-const asyncThunkAction: ActionCreator<
+export const asyncThunkActionCreator: ActionCreator<
     ThunkAction<Promise<Action>, {}, undefined, Action>
-    > = () => {
+    > = (name: string) => {
         return async (dispatch: Dispatch<Action>, getState: () => void): Promise<Action> => {
             try {
-                //   const text = await Api.call();
-                return dispatch({
-                    type: "SET_TEXT",
-                    text: "text"
+                let p = dispatch({
+                    type: "ADD_TODO",
+                    payload: {
+                        name,
+                        checked: false,
+                        id: ++pid,
+                    },
                 });
+                return p;
             } catch (e) { }
         };
     };
-
-
-
-
-
-
-
-let todoId: number = 0;
-
-export const addTodoActionCreator = (name: string): AddTodoAction => {
-    return {
-        type: "ADD_TODO",
-        payload: {
-            name: name,
-            checked: false,
-            id: ++todoId,
-        }
-    }
-}
-
-export const deleteTodoActionCreator = (index: number): DeleteTodoAction => {
-    return {
-        type: "DELETE_TODO",
-        payload: {
-            index: index
-        }
-    }
-}
-
 

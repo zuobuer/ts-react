@@ -126,6 +126,6 @@ module.exports = {
         contentBase: "./public",
         port: "8080",
         compress: true,
-        open: true,
+        // open: true,
     }
 };
